@@ -1,68 +1,163 @@
+/* ---------- Variables ---------- */
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  --bg: #f7f7f8;
+  --surface: #ffffff;
+  --text: #16181d;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --brand: #2563eb;
+  --danger: #ef4444;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --radius: 12px;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 6px 16px rgba(0, 0, 0, 0.06);
+
+  --fs-0: 14px;
+  --fs-1: 16px;
+  --fs-2: 20px;
+
+  --container: 900px;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+/* ---------- Base ---------- */
+* {
+  box-sizing: border-box;
 }
-a:hover {
-  color: #535bf2;
-}
-
 body {
   margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+.page {
+  padding: var(--space-6) var(--space-4);
+}
+.container {
+  max-width: var(--container);
+  margin: 0 auto;
+}
+
+/* ---------- Header ---------- */
+.header {
   display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  align-items: center;
+  justify-content: space-between;
+}
+.title {
+  margin: 0 0 var(--space-4);
+  font-size: 24px;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+/* ---------- Panels ---------- */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: var(--space-6);
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+/* ---------- Form ---------- */
+.form-grid {
+  display: grid;
+  gap: var(--space-4);
+} /* single column */
+.label {
+  display: block;
+  font-size: var(--fs-0);
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.input,
+.select {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: var(--fs-1);
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  outline: none;
+}
+.input:focus,
+.select:focus {
+  border-color: #cbd5e1;
+}
+
+.form-actions {
+  display: flex;
+  gap: var(--space-3);
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  font-size: var(--fs-1);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
   cursor: pointer;
-  transition: border-color 0.25s;
 }
-button:hover {
-  border-color: #646cff;
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.btn--primary {
+  background: var(--brand);
+  color: #fff;
+  border-color: #1e40af;
+}
+.btn--danger {
+  background: var(--danger);
+  color: #fff;
+  border-color: #b91c1c;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+/* ---------- List & Cards ---------- */
+.list {
+  display: grid;
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+}
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: var(--space-4);
+  display: grid;
+  gap: 6px;
+}
+.card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card__title {
+  font-weight: 600;
+  font-size: var(--fs-2);
+}
+.card__meta {
+  color: var(--muted);
+  font-size: var(--fs-0);
+}
+.card__actions {
+  display: flex;
+  gap: var(--space-3);
+}
+
+/* ---------- Misc ---------- */
+.sentinel {
+  height: 1px;
+}
+.muted {
+  color: var(--muted);
 }
