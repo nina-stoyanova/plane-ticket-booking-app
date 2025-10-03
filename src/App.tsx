@@ -1,8 +1,7 @@
-import Button from "./components/ui/Button";
-import Field from "./components/ui/Field";
-import Select from "./components/ui/Select";
-
-//card, form, card, list
+import BookingCard from "./components/bookings/BookingCard";
+import BookingForm from "./components/bookings/BookingForm";
+import type { BookingItem } from "./components/bookings/BookingList";
+import BookingList from "./components/bookings/BookingList";
 
 export default function App() {
   const airports = [
@@ -11,54 +10,35 @@ export default function App() {
     { value: 3, label: "LHR — London Heathrow" },
   ];
 
+  const items: BookingItem[] = [
+    {
+      id: 1,
+      firstName: "Anna",
+      lastName: "K",
+      departureDate: "2025-10-01",
+      returnDate: "2025-10-05",
+    },
+    {
+      id: 2,
+      firstName: "John",
+      lastName: "D",
+      departureDate: "2025-11-12",
+      returnDate: "2025-11-18",
+    },
+  ];
+
   return (
     <div className="page">
       <div className="container">
         <h1 className="title">Booking app</h1>
 
-        {/* Create booking */}
-        <section className="panel">
-          <form className="form-grid">
-            <Field id="firstName" label="First name" placeholder="John" />
-            <Field id="lastName" label="Last name" placeholder="Doe" />
+        <BookingCard>
+          <BookingForm airports={airports} />
+        </BookingCard>
 
-            <Select
-              id="dep"
-              label="Departure airport"
-              placeholder="Select departure"
-              options={airports}
-            />
-            <Select
-              id="arr"
-              label="Arrival airport"
-              placeholder="Select arrival"
-              options={airports}
-            />
-
-            <Field id="d1" label="Departure date" type="date" />
-            <Field id="d2" label="Return date" type="date" />
-
-            <div className="form-actions">
-              <Button type="submit" label="Create booking" />
-              <Button type="reset" label="Reset" />
-            </div>
-          </form>
-        </section>
-
-        {/* Existing bookings */}
-        <section className="list">
-          <article className="card">
-            <div className="card__top">
-              <div className="card__title">Anna K</div>
-              <div className="card__meta">2025-10-01 → 2025-10-05</div>
-            </div>
-            <div className="card__actions">
-              <Button type="delete" label="Delete"></Button>
-            </div>
-          </article>
-
-          <div className="sentinel" />
-        </section>
+        <BookingCard>
+          <BookingList items={items} />
+        </BookingCard>
       </div>
     </div>
   );

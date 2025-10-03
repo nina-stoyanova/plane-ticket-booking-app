@@ -1,3 +1,5 @@
-export default function BookingCard() {
-  return <div>Booking card</div>;
+export type BookingCardProps = { children?: React.ReactNode };
+
+export default function BookingCard({ children }: BookingCardProps) {
+  return <article className="card">{children}</article>;
 }
