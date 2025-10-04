@@ -88,6 +88,18 @@ body {
   border-color: #cbd5e1;
 }
 
+/* Error states */
+.input--error,
+.select--error {
+  border-color: var(--danger);
+}
+
+.error-message {
+  color: var(--danger);
+  font-size: 12px;
+  margin-top: 4px;
+}
+
 .form-actions {
   display: flex;
   gap: var(--space-3);
