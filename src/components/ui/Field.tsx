@@ -5,6 +5,7 @@ export type FieldProps = {
   placeholder?: string;
   min?: string;
   required?: boolean;
+  error?: string;
 
   value?: string | number;
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
@@ -20,7 +21,10 @@ export default function Field(props: FieldProps) {
     onChange,
     min,
     required,
+    error,
   } = props;
+
+  const className = `input ${error ? "input--error" : ""}`;
 
   return (
     <div>
@@ -30,13 +34,14 @@ export default function Field(props: FieldProps) {
       <input
         id={id}
         type={type}
-        className="input"
+        className={className}
         placeholder={placeholder}
         required={required}
-        {...(value !== undefined ? { value } : {})}
-        {...(onChange ? { onChange } : {})}
-        {...(min ? { min } : {})}
+        value={value}
+        onChange={onChange}
+        min={min}
       />
+      {error && <div className="error-message">{error}</div>}
     </div>
   );
 }

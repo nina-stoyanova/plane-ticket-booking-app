@@ -6,13 +6,17 @@ export type SelectProps = {
   options: SelectOption[];
   placeholder?: string;
   required?: boolean;
+  error?: string;
 
   value?: string | number;
   onChange?: React.ChangeEventHandler<HTMLSelectElement>;
 };
 
 export default function Select(props: SelectProps) {
-  const { id, label, options, placeholder, value, onChange, required } = props;
+  const { id, label, options, placeholder, value, onChange, required, error } =
+    props;
+
+  const className = `select ${error ? "select--error" : ""}`;
 
   return (
     <div>
@@ -21,10 +25,10 @@ export default function Select(props: SelectProps) {
       </label>
       <select
         id={id}
-        className="select"
+        className={className}
         required={required}
-        {...(value !== undefined ? { value } : {})}
-        {...(onChange ? { onChange } : {})}
+        value={value}
+        onChange={onChange}
       >
         {placeholder && <option value="">{placeholder}</option>}
         {options.map((opt) => (
@@ -33,6 +37,7 @@ export default function Select(props: SelectProps) {
           </option>
         ))}
       </select>
+      {error && <div className="error-message">{error}</div>}
     </div>
   );
 }
