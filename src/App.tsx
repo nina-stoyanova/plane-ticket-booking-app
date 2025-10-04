@@ -1,31 +1,76 @@
+import { useDispatch, useSelector } from "react-redux";
 import BookingCard from "./components/bookings/BookingCard";
-import BookingForm from "./components/bookings/BookingForm";
-import type { BookingItem } from "./components/bookings/BookingList";
+import BookingForm, {
+  type BookingFormValues,
+} from "./components/bookings/BookingForm";
 import BookingList from "./components/bookings/BookingList";
+import type { RootState } from "./state/store";
+import {
+  addBooking,
+  selectAirports,
+  selectBookings,
+  setAirports,
+  setBookings,
+} from "./state/bookingsSlice";
+import { useCallback, useEffect } from "react";
+import { API } from "./api/api";
 
 export default function App() {
-  const airports = [
-    { value: 1, label: "SOF — Sofia" },
-    { value: 2, label: "BER — Berlin" },
-    { value: 3, label: "LHR — London Heathrow" },
-  ];
+  const dispatch = useDispatch();
 
-  const items: BookingItem[] = [
-    {
-      id: 1,
-      firstName: "Anna",
-      lastName: "K",
-      departureDate: "2025-10-01",
-      returnDate: "2025-10-05",
+  const airports = useSelector((s: RootState) => selectAirports(s));
+  const bookings = useSelector((s: RootState) => selectBookings(s));
+  console.log("airports store", airports);
+  console.log("bookings store", bookings);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const airports = await API.Airports.list();
+        dispatch(setAirports(airports));
+
+        const bookings = await API.Bookings.list(0, 10);
+        dispatch(setBookings(bookings));
+      } catch (err) {
+        console.error("API Error Details:", err);
+      }
+    })();
+  }, [dispatch]);
+
+  const handleCreate = useCallback(
+    async (values: BookingFormValues) => {
+      try {
+        const created = await API.Bookings.create(values);
+
+        dispatch(
+          addBooking({
+            id: created.id,
+            firstName: created.firstName,
+            lastName: created.lastName,
+            departureDate: created.departureDate,
+            returnDate: created.returnDate,
+          })
+        );
+      } catch (err) {
+        console.error("Create booking failed:", err);
+        alert("Failed to create booking");
+      }
     },
-    {
-      id: 2,
-      firstName: "John",
-      lastName: "D",
-      departureDate: "2025-11-12",
-      returnDate: "2025-11-18",
-    },
-  ];
+    [dispatch]
+  );
+
+  const airportOptions = airports.map((a) => ({
+    value: a.id,
+    label: `${a.code} — ${a.title}`,
+  }));
+
+  const listItems = bookings.map((b) => ({
+    id: b.id,
+    firstName: b.firstName,
+    lastName: b.lastName,
+    departureDate: b.departureDate,
+    returnDate: b.returnDate,
+  }));
 
   return (
     <div className="page">
@@ -33,11 +78,11 @@ export default function App() {
         <h1 className="title">Booking app</h1>
 
         <BookingCard>
-          <BookingForm airports={airports} />
+          <BookingForm airports={airportOptions} onCreate={handleCreate} />
         </BookingCard>
 
         <BookingCard>
-          <BookingList items={items} />
+          <BookingList items={listItems} />
         </BookingCard>
       </div>
     </div>
