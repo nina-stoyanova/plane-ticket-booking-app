@@ -7,6 +7,7 @@ import BookingList from "./components/bookings/BookingList";
 import type { RootState } from "./state/store";
 import {
   addBooking,
+  removeBooking,
   selectAirports,
   selectBookings,
   setAirports,
@@ -59,6 +60,19 @@ export default function App() {
     [dispatch]
   );
 
+  const handleDelete = useCallback(
+    async (id: number) => {
+      try {
+        await API.Bookings.remove(id);
+        dispatch(removeBooking(id));
+      } catch (err) {
+        console.error("Delete booking failed:", err);
+        alert("Failed to delete booking");
+      }
+    },
+    [dispatch]
+  );
+
   const airportOptions = airports.map((a) => ({
     value: a.id,
     label: `${a.code} — ${a.title}`,
@@ -82,7 +96,7 @@ export default function App() {
         </BookingCard>
 
         <BookingCard>
-          <BookingList items={listItems} />
+          <BookingList items={listItems} onDelete={handleDelete} />
         </BookingCard>
       </div>
     </div>

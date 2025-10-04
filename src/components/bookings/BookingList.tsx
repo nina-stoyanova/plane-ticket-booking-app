@@ -10,9 +10,10 @@ export type BookingItem = {
 
 export type BookingListProps = {
   items: BookingItem[];
+  onDelete?: (id: number) => void;
 };
 
-export default function BookingList({ items }: BookingListProps) {
+export default function BookingList({ items, onDelete }: BookingListProps) {
   return (
     <section className="list">
       {items.map((b) => (
@@ -27,7 +28,11 @@ export default function BookingList({ items }: BookingListProps) {
           </div>
 
           <div className="card__actions">
-            <Button type="delete" label="Delete" />
+            <Button
+              type="delete"
+              label="Delete"
+              onClick={() => onDelete?.(b.id)}
+            />
           </div>
         </article>
       ))}
