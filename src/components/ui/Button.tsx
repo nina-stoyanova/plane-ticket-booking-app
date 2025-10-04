@@ -1,6 +1,7 @@
 export type ButtonProps = {
   type: "submit" | "reset" | "delete";
   label: string;
+  onClick?: () => void;
 };
 
 const buttonTypeToClass = {
@@ -19,12 +20,16 @@ const buttonTypeToNativeType: Record<
 };
 
 export default function Button(props: ButtonProps) {
-  const { type, label } = props;
+  const { type, label, onClick } = props;
 
   const classes = buttonTypeToClass[type];
 
   return (
-    <button className={classes} type={buttonTypeToNativeType[type]}>
+    <button
+      className={classes}
+      type={buttonTypeToNativeType[type]}
+      onClick={onClick}
+    >
       {label}
     </button>
   );
