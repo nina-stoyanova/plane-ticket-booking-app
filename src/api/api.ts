@@ -22,16 +22,21 @@ export class ApiError extends Error {
 
 async function http<T>(path: string, init: RequestInit = {}): Promise<T> {
   const token = TOKEN_KEY;
+
   const headers: HeadersInit = {
     Accept: "application/json",
     ...(init.body instanceof FormData
       ? {}
       : { "Content-Type": "application/json" }),
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
     ...(init.headers ?? {}),
   };
 
-  const rawResponse = await fetch(`${API_BASE}${path}`, { ...init, headers });
+  const url = new URL(`${API_BASE}${path}`);
+  if (token) {
+    url.searchParams.set("authToken", token);
+  }
+
+  const rawResponse = await fetch(url.toString(), { ...init, headers });
 
   let parsedResponse: any = null;
 
@@ -60,8 +65,8 @@ export const API = {
   Bookings: {
     list(page?: number, size?: number): Promise<Page<BookingFull>> {
       const qs = new URLSearchParams();
-      if (page != null) qs.set("page", String(page));
-      if (size != null) qs.set("size", String(size));
+      if (page != null) qs.set("pageIndex", String(page));
+      if (size != null) qs.set("pageSize", String(size));
       const suffix = qs.toString() ? `?${qs}` : "";
       return http<Page<BookingFull>>(`/bookings${suffix}`);
     },

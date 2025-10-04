@@ -1,9 +1,9 @@
-import { configureStore } from '@reduxjs/toolkit';
-import bookingsUiReducer from '@/state/bookingsUi.slice';
+import { configureStore } from "@reduxjs/toolkit";
+import bookingsSlice from "@/state/bookingsSlice";
 
 export const store = configureStore({
   reducer: {
-    bookingsUi: bookingsUiReducer,  
+    bookings: bookingsSlice,
   },
 });
 
