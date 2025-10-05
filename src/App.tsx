@@ -8,19 +8,18 @@ import type { RootState } from "./state/store";
 import {
   addBooking,
   appendBookings,
+  clearBookingDetails,
   removeBooking,
   selectAirports,
   selectBookings,
   selectHasMoreBookingToLoad,
-  setSelectedBookingId,
 } from "./state/bookingsSlice";
 import { useCallback, useState } from "react";
 import { API } from "./api/api";
 import Modal from "./components/ui/Modal";
-import { formatDate } from "./utils/formatDate";
 import BookingDetailsContent from "./components/bookings/BookingDetailsContent";
-import { useInitialLoad } from "./state/hooks/useInitialLoad";
-import { useBookingDetails } from "./state/hooks/useBookingDetails";
+import { useInitialLoad } from "./hooks/useInitialLoad";
+import { useBookingDetails } from "./hooks/useBookingDetails";
 
 export default function App() {
   const dispatch = useDispatch();
@@ -30,7 +29,7 @@ export default function App() {
   const airports = useSelector((s: RootState) => selectAirports(s));
   const bookings = useSelector((s: RootState) => selectBookings(s));
   const hasMore = useSelector((s: RootState) => selectHasMoreBookingToLoad(s));
-  const { detailsOpen, setDetailsOpen, selectedBookingDetails, openWithId } =
+  const { selectedBookingDetails, openWithId, selectedBookingId } =
     useBookingDetails();
 
   const [page, setPage] = useState(0);
@@ -114,15 +113,14 @@ export default function App() {
           </BookingCard>
         )}
         <Modal
-          open={detailsOpen}
-          onClose={() => setDetailsOpen(false)}
+          open={!!selectedBookingId}
+          onClose={() => dispatch(clearBookingDetails())}
           title="Booking details"
           content={
             selectedBookingDetails && (
               <BookingDetailsContent
                 details={selectedBookingDetails}
                 getAirportName={getAirportName}
-                formatDate={formatDate}
               />
             )
           }

@@ -69,6 +69,10 @@ const bookingsSlice = createSlice({
     setSelectedBookingId(state, action: PayloadAction<number>) {
       state.selectedBookingId = action.payload;
     },
+    clearBookingDetails(state) {
+      state.bookingDetails = null;
+      state.selectedBookingId = null;
+    },
   },
 });
 
@@ -81,6 +85,7 @@ export const {
   clearAll,
   setBookingDetails,
   setSelectedBookingId,
+  clearBookingDetails,
 } = bookingsSlice.actions;
 
 export default bookingsSlice.reducer;

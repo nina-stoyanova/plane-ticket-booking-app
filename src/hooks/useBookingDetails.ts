@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/state/store";
 import {
@@ -12,8 +12,6 @@ import { API } from "@/api/api";
 export function useBookingDetails() {
   const dispatch = useDispatch();
 
-  const [detailsOpen, setDetailsOpen] = useState(false);
-
   const selectedBookingId = useSelector((s: RootState) =>
     selectSelectedBookingId(s)
   );
@@ -23,7 +21,6 @@ export function useBookingDetails() {
 
   const openWithId = useCallback(
     (id: number) => {
-      setDetailsOpen(true);
       dispatch(setSelectedBookingId(id));
     },
     [dispatch]
@@ -43,8 +40,7 @@ export function useBookingDetails() {
 
   return {
     selectedBookingDetails,
-    detailsOpen,
-    setDetailsOpen,
+    selectedBookingId,
     openWithId,
   };
 }

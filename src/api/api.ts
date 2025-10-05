@@ -38,16 +38,15 @@ async function http<T>(path: string, init: RequestInit = {}): Promise<T> {
 
   const rawResponse = await fetch(url.toString(), { ...init, headers });
 
+  const contentLength = Number(rawResponse.headers.get("Content-Length"));
+
   let parsedResponse: any = null;
 
   try {
-    parsedResponse = await rawResponse.json();
-  } catch (error) {
-    // If JSON parsing fails (e.g., empty response), return success object for successful requests
-    if (rawResponse.ok) {
-      parsedResponse = { success: true };
+    if (contentLength !== 0) {
+      parsedResponse = await rawResponse.json();
     }
-  }
+  } catch (error) {}
 
   if (!rawResponse.ok) {
     throw new ApiError(

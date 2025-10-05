@@ -1,3 +1,5 @@
+import { formatDate } from "@/utils/formatDate";
+
 type Props = {
   details: {
     firstName: string;
@@ -8,13 +10,11 @@ type Props = {
     returnDate: string;
   };
   getAirportName: (id: number) => string;
-  formatDate: (iso: string) => string;
 };
 
 export default function BookingDetailsContent({
   details,
   getAirportName,
-  formatDate,
 }: Props) {
   return (
     <div>

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { API } from "../../api/api";
-import { setAirports, setBookings } from "../bookingsSlice";
+import { API } from "../api/api";
+import { setAirports, setBookings } from "../state/bookingsSlice";
 
 export function useInitialLoad() {
   const dispatch = useDispatch();
