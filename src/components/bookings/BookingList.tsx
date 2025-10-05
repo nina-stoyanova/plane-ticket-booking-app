@@ -1,4 +1,6 @@
 import Button from "@/components/ui/Button";
+import { useIntersectionObserver } from "@/state/UseIntersectionObserver";
+import { useEffect } from "react";
 
 export type BookingItem = {
   id: number;
@@ -11,9 +13,26 @@ export type BookingItem = {
 export type BookingListProps = {
   items: BookingItem[];
   onDelete?: (id: number) => void;
+  onReachEnd?: () => void;
 };
 
-export default function BookingList({ items, onDelete }: BookingListProps) {
+export default function BookingList({
+  items,
+  onDelete,
+  onReachEnd,
+}: BookingListProps) {
+  const { containerRef, isVisible } = useIntersectionObserver({
+    root: null,
+    rootMargin: "0px",
+    threshold: 0.1,
+  });
+
+  useEffect(() => {
+    if (isVisible) {
+      onReachEnd?.();
+    }
+  }, [isVisible, onReachEnd]);
+
   return (
     <section className="list">
       {items.map((b) => (
@@ -37,7 +56,9 @@ export default function BookingList({ items, onDelete }: BookingListProps) {
         </article>
       ))}
 
-      <div className="sentinel" />
+      <div ref={containerRef} style={{ height: "1px" }} />
+
+      {<p>No more bookings</p>}
     </section>
   );
 }

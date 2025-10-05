@@ -82,3 +82,6 @@ export const selectBookings = (s: RootState) => s.bookings.bookings;
 export const selectTotalCount = (s: RootState) => s.bookings.totalCount;
 export const selectDetailById = (id: number) => (s: RootState) =>
   s.bookings.detailsById?.[id];
+export const selectHasMoreBookingToLoad = (s: RootState) => {
+  return s.bookings.totalCount > s.bookings.bookings.length;
+};

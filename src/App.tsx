@@ -7,13 +7,15 @@ import BookingList from "./components/bookings/BookingList";
 import type { RootState } from "./state/store";
 import {
   addBooking,
+  appendBookings,
   removeBooking,
   selectAirports,
   selectBookings,
+  selectHasMoreBookingToLoad,
   setAirports,
   setBookings,
 } from "./state/bookingsSlice";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { API } from "./api/api";
 
 export default function App() {
@@ -21,8 +23,9 @@ export default function App() {
 
   const airports = useSelector((s: RootState) => selectAirports(s));
   const bookings = useSelector((s: RootState) => selectBookings(s));
-  console.log("airports store", airports);
-  console.log("bookings store", bookings);
+
+  const hasMore = useSelector((s: RootState) => selectHasMoreBookingToLoad(s));
+  const [page, setPage] = useState(0);
 
   useEffect(() => {
     (async () => {
@@ -30,28 +33,38 @@ export default function App() {
         const airports = await API.Airports.list();
         dispatch(setAirports(airports));
 
-        const bookings = await API.Bookings.list(0, 10);
-        dispatch(setBookings(bookings));
+        const firstPageBookings = await API.Bookings.list(0, 2);
+        dispatch(setBookings(firstPageBookings));
       } catch (err) {
         console.error("API Error Details:", err);
       }
     })();
   }, [dispatch]);
 
+  const handleLoadMore = useCallback(async () => {
+    if (hasMore) {
+      try {
+        const nextPage = page + 1;
+        const nextBookings = await API.Bookings.list(nextPage, 2);
+
+        if (nextBookings.list.length > 0) {
+          dispatch(appendBookings(nextBookings.list));
+          setPage(nextPage);
+        } else {
+          false;
+        }
+      } catch (err) {
+        console.error("Load more failed:", err);
+      }
+    }
+  }, [dispatch, page, bookings]);
+
   const handleCreate = useCallback(
     async (values: BookingFormValues) => {
       try {
         const created = await API.Bookings.create(values);
 
-        dispatch(
-          addBooking({
-            id: created.id,
-            firstName: created.firstName,
-            lastName: created.lastName,
-            departureDate: created.departureDate,
-            returnDate: created.returnDate,
-          })
-        );
+        dispatch(addBooking(created));
       } catch (err) {
         console.error("Create booking failed:", err);
         alert("Failed to create booking");
@@ -96,7 +109,11 @@ export default function App() {
         </BookingCard>
 
         <BookingCard>
-          <BookingList items={listItems} onDelete={handleDelete} />
+          <BookingList
+            items={listItems}
+            onDelete={handleDelete}
+            onReachEnd={handleLoadMore}
+          />
         </BookingCard>
       </div>
     </div>

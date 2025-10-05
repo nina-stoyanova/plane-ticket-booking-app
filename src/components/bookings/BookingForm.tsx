@@ -88,7 +88,14 @@ export default function BookingForm({ airports, onCreate }: BookingFormProps) {
   };
 
   return (
-    <form className="form-grid">
+    <form
+      className="form-grid"
+      noValidate
+      onSubmit={(e) => {
+        e.preventDefault();
+        handleSubmit(e);
+      }}
+    >
       <Field
         id="firstName"
         label="First name"
@@ -114,7 +121,7 @@ export default function BookingForm({ airports, onCreate }: BookingFormProps) {
         label="Departure airport"
         placeholder="Select departure"
         options={airports}
-        value={values.departureAirportId || ""}
+        value={values.departureAirportId > 0 ? values.departureAirportId : ""}
         onChange={handleInput("departureAirportId")}
         error={errors.departureAirportId}
         required
@@ -125,7 +132,7 @@ export default function BookingForm({ airports, onCreate }: BookingFormProps) {
         label="Arrival airport"
         placeholder="Select arrival"
         options={airports}
-        value={values.arrivalAirportId || ""}
+        value={values.arrivalAirportId > 0 ? values.arrivalAirportId : ""}
         onChange={handleInput("arrivalAirportId")}
         error={errors.arrivalAirportId}
         required
@@ -154,13 +161,7 @@ export default function BookingForm({ airports, onCreate }: BookingFormProps) {
       />
 
       <div className="form-actions">
-        <Button
-          type="submit"
-          label="Create booking"
-          onClick={() =>
-            handleSubmit({ preventDefault: () => {} } as React.FormEvent)
-          }
-        />
+        <Button type="submit" label="Create booking" />
         <Button type="reset" label="Reset" onClick={handleReset} />
       </div>
     </form>
