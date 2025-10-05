@@ -12,47 +12,28 @@ import {
   selectAirports,
   selectBookings,
   selectHasMoreBookingToLoad,
-  selectSelectedBookingDetails,
-  selectSelectedBookingId,
-  setAirports,
-  setBookingDetails,
-  setBookings,
   setSelectedBookingId,
 } from "./state/bookingsSlice";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { API } from "./api/api";
 import Modal from "./components/ui/Modal";
 import { formatDate } from "./utils/formatDate";
+import BookingDetailsContent from "./components/bookings/BookingDetailsContent";
+import { useInitialLoad } from "./state/hooks/useInitialLoad";
+import { useBookingDetails } from "./state/hooks/useBookingDetails";
 
 export default function App() {
   const dispatch = useDispatch();
 
+  useInitialLoad();
+
   const airports = useSelector((s: RootState) => selectAirports(s));
   const bookings = useSelector((s: RootState) => selectBookings(s));
-  const selectedBookingId = useSelector((s: RootState) =>
-    selectSelectedBookingId(s)
-  );
-  const selectedBookingDetails = useSelector((s: RootState) =>
-    selectSelectedBookingDetails(s)
-  );
   const hasMore = useSelector((s: RootState) => selectHasMoreBookingToLoad(s));
+  const { detailsOpen, setDetailsOpen, selectedBookingDetails, openWithId } =
+    useBookingDetails();
 
   const [page, setPage] = useState(0);
-  const [detailsOpen, setDetailsOpen] = useState(false);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const airports = await API.Airports.list();
-        dispatch(setAirports(airports));
-
-        const firstPageBookings = await API.Bookings.list(0, 5);
-        dispatch(setBookings(firstPageBookings));
-      } catch (err) {
-        console.error("API Error Details:", err);
-      }
-    })();
-  }, [dispatch]);
 
   const handleLoadMore = useCallback(async () => {
     if (!hasMore) return;
@@ -95,26 +76,6 @@ export default function App() {
     [dispatch]
   );
 
-  const handleViewBookingDetails = useCallback(
-    (id: number) => {
-      setDetailsOpen(true);
-      dispatch(setSelectedBookingId(id));
-    },
-    [dispatch]
-  );
-
-  useEffect(() => {
-    if (!selectedBookingId) return;
-    (async () => {
-      try {
-        const bookingDetails = await API.Bookings.getById(selectedBookingId);
-        dispatch(setBookingDetails(bookingDetails));
-      } catch (err) {
-        console.error("Fetch booking details failed:", err);
-      }
-    })();
-  }, [dispatch, selectedBookingId]);
-
   const airportOptions = airports.map((a) => ({
     value: a.id,
     label: `${a.code} — ${a.title}`,
@@ -147,7 +108,7 @@ export default function App() {
             <BookingList
               items={listItems}
               onDelete={handleDelete}
-              onView={handleViewBookingDetails}
+              onView={openWithId}
               onReachEnd={handleLoadMore}
             />
           </BookingCard>
@@ -158,26 +119,11 @@ export default function App() {
           title="Booking details"
           content={
             selectedBookingDetails && (
-              <div>
-                <div>
-                  <span className="muted">Name:</span>{" "}
-                  {selectedBookingDetails.firstName}{" "}
-                  {selectedBookingDetails.lastName}
-                </div>
-                <div>
-                  <span className="muted">Itinerary:</span>{" "}
-                  {getAirportName(selectedBookingDetails.departureAirportId)} →{" "}
-                  {getAirportName(selectedBookingDetails.arrivalAirportId)}
-                </div>
-                <div>
-                  <span className="muted">Departure:</span>{" "}
-                  {formatDate(selectedBookingDetails.departureDate)}
-                </div>
-                <div>
-                  <span className="muted">Return:</span>{" "}
-                  {formatDate(selectedBookingDetails.returnDate)}
-                </div>
-              </div>
+              <BookingDetailsContent
+                details={selectedBookingDetails}
+                getAirportName={getAirportName}
+                formatDate={formatDate}
+              />
             )
           }
         />

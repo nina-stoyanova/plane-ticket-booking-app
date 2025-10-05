@@ -1,5 +1,5 @@
 import Button from "@/components/ui/Button";
-import { useIntersectionObserver } from "@/state/UseIntersectionObserver";
+import { useIntersectionObserver } from "@/state/hooks/useIntersectionObserver";
 import { formatDate } from "@/utils/formatDate";
 import { useEffect } from "react";
 
