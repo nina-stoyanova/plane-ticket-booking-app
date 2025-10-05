@@ -41,24 +41,9 @@ body {
   margin: 0 auto;
 }
 
-/* ---------- Header ---------- */
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
 .title {
   margin: 0 0 var(--space-4);
   font-size: 24px;
-}
-
-/* ---------- Panels ---------- */
-.panel {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: var(--space-6);
 }
 
 /* ---------- Form ---------- */
@@ -83,10 +68,6 @@ body {
   border-radius: 10px;
   outline: none;
 }
-.input:focus,
-.select:focus {
-  border-color: #cbd5e1;
-}
 
 /* Error states */
 .input--error,
@@ -110,18 +91,16 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 14px;
-  font-size: var(--fs-1);
+  padding: 6px 12px;
+  font-size: 14px;
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 8px;
   background: var(--surface);
   color: var(--text);
   cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
 }
-.btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
+
 .btn--primary {
   background: var(--brand);
   color: #fff;
@@ -131,6 +110,11 @@ body {
   background: var(--danger);
   color: #fff;
   border-color: #b91c1c;
+}
+.btn--view {
+  background: transparent;
+  color: var(--brand);
+  border-color: var(--brand);
 }
 
 /* ---------- List & Cards ---------- */
@@ -166,10 +150,67 @@ body {
   gap: var(--space-3);
 }
 
-/* ---------- Misc ---------- */
-.sentinel {
-  height: 1px;
+/* ---------- Modal ---------- */
+.simple-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  z-index: 1000;
 }
+
+.simple-modal {
+  width: 100%;
+  max-width: 640px;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.simple-modal h3 {
+  margin-top: 0;
+  margin-bottom: var(--space-4);
+  font-size: var(--fs-2);
+  font-weight: 600;
+}
+
+.simple-modal__content {
+  flex: 1;
+}
+
+.simple-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border);
+}
+
+.simple-modal__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: var(--space-4);
+  padding: 6px 10px; /* ⬇️ smaller button padding */
+  font-size: 14px; /* ⬇️ slightly smaller font */
+  background: var(--brand);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+/* ---------- Misc ---------- */
+
 .muted {
   color: var(--muted);
 }

@@ -43,7 +43,10 @@ async function http<T>(path: string, init: RequestInit = {}): Promise<T> {
   try {
     parsedResponse = await rawResponse.json();
   } catch (error) {
-    console.error("Error parsing JSON", error);
+    // If JSON parsing fails (e.g., empty response), return success object for successful requests
+    if (rawResponse.ok) {
+      parsedResponse = { success: true };
+    }
   }
 
   if (!rawResponse.ok) {

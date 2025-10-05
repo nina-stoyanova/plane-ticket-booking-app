@@ -6,6 +6,8 @@ export type BookingItem = {
   id: number;
   firstName: string;
   lastName: string;
+  departureAirportId: number;
+  arrivalAirportId: number;
   departureDate: string;
   returnDate: string;
 };
@@ -14,14 +16,16 @@ type BookingDataState = {
   airports: Airport[];
   bookings: BookingItem[];
   totalCount: number;
-  detailsById?: Record<number, BookingItem>;
+  selectedBookingId?: number | null;
+  bookingDetails?: BookingItem | null;
 };
 
 const initialState: BookingDataState = {
   airports: [],
   bookings: [],
   totalCount: 0,
-  detailsById: {},
+  selectedBookingId: null,
+  bookingDetails: null,
 };
 
 const bookingsSlice = createSlice({
@@ -56,11 +60,14 @@ const bookingsSlice = createSlice({
       state.airports = [];
       state.bookings = [];
       state.totalCount = 0;
-      state.detailsById = {};
+      state.selectedBookingId = null;
+      state.bookingDetails = null;
     },
-
-    setBookingDetail(state, action: PayloadAction<BookingItem>) {
-      state.detailsById![action.payload.id] = action.payload;
+    setBookingDetails(state, action: PayloadAction<BookingItem>) {
+      state.bookingDetails = action.payload;
+    },
+    setSelectedBookingId(state, action: PayloadAction<number>) {
+      state.selectedBookingId = action.payload;
     },
   },
 });
@@ -72,7 +79,8 @@ export const {
   addBooking,
   removeBooking,
   clearAll,
-  setBookingDetail,
+  setBookingDetails,
+  setSelectedBookingId,
 } = bookingsSlice.actions;
 
 export default bookingsSlice.reducer;
@@ -80,8 +88,10 @@ export default bookingsSlice.reducer;
 export const selectAirports = (s: RootState) => s.bookings.airports;
 export const selectBookings = (s: RootState) => s.bookings.bookings;
 export const selectTotalCount = (s: RootState) => s.bookings.totalCount;
-export const selectDetailById = (id: number) => (s: RootState) =>
-  s.bookings.detailsById?.[id];
+export const selectSelectedBookingId = (s: RootState) =>
+  s.bookings.selectedBookingId;
+export const selectSelectedBookingDetails = (s: RootState) =>
+  s.bookings.bookingDetails;
 export const selectHasMoreBookingToLoad = (s: RootState) => {
   return s.bookings.totalCount > s.bookings.bookings.length;
 };

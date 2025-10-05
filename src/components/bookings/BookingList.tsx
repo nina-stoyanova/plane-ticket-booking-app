@@ -1,5 +1,6 @@
 import Button from "@/components/ui/Button";
 import { useIntersectionObserver } from "@/state/UseIntersectionObserver";
+import { formatDate } from "@/utils/formatDate";
 import { useEffect } from "react";
 
 export type BookingItem = {
@@ -13,12 +14,14 @@ export type BookingItem = {
 export type BookingListProps = {
   items: BookingItem[];
   onDelete?: (id: number) => void;
+  onView?: (id: number) => void;
   onReachEnd?: () => void;
 };
 
 export default function BookingList({
   items,
   onDelete,
+  onView,
   onReachEnd,
 }: BookingListProps) {
   const { containerRef, isVisible } = useIntersectionObserver({
@@ -35,14 +38,15 @@ export default function BookingList({
 
   return (
     <section className="list">
-      {items.map((b) => (
-        <article key={b.id} className="card">
+      {items.map((booking) => (
+        <article key={booking.id} className="card">
           <div className="card__top">
             <div className="card__title">
-              {b.firstName} {b.lastName}
+              {booking.firstName} {booking.lastName}
             </div>
             <div className="card__meta">
-              {b.departureDate} → {b.returnDate}
+              {formatDate(booking.departureDate)} →{" "}
+              {formatDate(booking.returnDate)}
             </div>
           </div>
 
@@ -50,15 +54,20 @@ export default function BookingList({
             <Button
               type="delete"
               label="Delete"
-              onClick={() => onDelete?.(b.id)}
+              onClick={() => onDelete?.(booking.id)}
+            />
+            <Button
+              type="view"
+              label="View"
+              onClick={() => onView?.(booking.id)}
             />
           </div>
         </article>
       ))}
 
-      <div ref={containerRef} style={{ height: "1px" }} />
-
-      {<p>No more bookings</p>}
+      {items.length > 0 && (
+        <div ref={containerRef} style={{ height: "1px" }}></div>
+      )}
     </section>
   );
 }

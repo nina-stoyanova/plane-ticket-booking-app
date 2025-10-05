@@ -75,7 +75,6 @@ export default function BookingForm({ airports, onCreate }: BookingFormProps) {
     const isValid = isFormValid(formErrors);
 
     if (!isValid) {
-      console.log("Form validation failed, not submitting");
       return;
     }
 
